@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:music_project_team_2021_app/src/constants/PageRouteAnimation.dart';
-import 'package:music_project_team_2021_app/src/model/music_file.dart';
+
+import 'package:music_project_team_2021_app/src/model/song_model.dart';
 import 'package:music_project_team_2021_app/src/page/play_home.dart';
 
 // ignore: must_be_immutable
 class MBottomTabBar extends StatelessWidget {
   Song song;
   MBottomTabBar({this.song});
-
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(

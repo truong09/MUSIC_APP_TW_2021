@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music_project_team_2021_app/src/model/music_file.dart';
+import 'package:music_project_team_2021_app/src/model/song_model.dart';
+
+import 'package:music_project_team_2021_app/src/widgets/list_song.dart';
 import 'package:music_project_team_2021_app/src/widgets/m_bottom_tab_bar.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: MBottomTabBar(song: song),
         body: Stack(children: [
           TabBarView(
-              children: [Container(), Container(), Container(), Container()]),
+              children: [ListSong(), Container(), Container(), Container()]),
         ]),
       ),
     );
