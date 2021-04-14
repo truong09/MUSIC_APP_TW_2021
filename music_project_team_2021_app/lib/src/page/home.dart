@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:music_project_team_2021_app/src/constants/temp_varible.dart';
+import 'package:music_project_team_2021_app/src/core/get_local_music.dart';
+import 'package:music_project_team_2021_app/src/core/get_permision.dart';
+import 'package:music_project_team_2021_app/src/core/shared_referance/song_now.dart';
+import 'package:music_project_team_2021_app/src/core/stream/song_stream.dart';
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 
 import 'package:music_project_team_2021_app/src/widgets/list_song.dart';
@@ -10,15 +15,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  StreamSong songStream = new StreamSong();
+  Song currentSong;
   Icon cusIcon = Icon(
     Icons.search,
     color: Colors.blue,
   );
-  Song song = Song(name: "Như phút ban đầu", singer: "Noo Phước Thịnh");
+
   Widget cusText = Text(
     "Danh sach nhac cua toi",
     style: TextStyle(color: Colors.black),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    getPerMision();
+    getLocalMusic();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -51,35 +66,52 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
                 icon: cusIcon,
                 onPressed: () {
-                  // getLocalMusic();
-                  setState(() {
-                    if (this.cusIcon.icon == Icons.search) {
-                      this.cusIcon = Icon(
-                        Icons.clear,
-                        color: Colors.blue,
-                      );
-                      this.cusText = TextField(
-                        autofocus: true,
-                      );
-                    } else {
-                      this.cusIcon = Icon(
-                        Icons.search,
-                        color: Colors.blue,
-                      );
-                      this.cusText = Text(
-                        'Danh sach bai hat cua to',
-                        style: TextStyle(color: Colors.black),
-                      );
-                    }
-                  });
+                  if (this.mounted) {
+                    setState(() {
+                      if (this.cusIcon.icon == Icons.search) {
+                        this.cusIcon = Icon(
+                          Icons.clear,
+                          color: Colors.blue,
+                        );
+                        this.cusText = TextField(
+                          autofocus: true,
+                        );
+                      } else {
+                        this.cusIcon = Icon(
+                          Icons.search,
+                          color: Colors.blue,
+                        );
+                        this.cusText = Text(
+                          'Danh sach bai hat cua to',
+                          style: TextStyle(color: Colors.black),
+                        );
+                      }
+                    });
+                  }
                 }),
           ],
         ),
-        bottomNavigationBar: MBottomTabBar(song: song),
-        body: Stack(children: [
-          TabBarView(
-              children: [ListSong(), Container(), Container(), Container()]),
-        ]),
+        bottomNavigationBar: StreamBuilder<Song>(
+            stream: songStream.songStream,
+            builder: (context, snapshot) {
+              print('day la ket qua');
+              print(snapshot.data);
+              if (snapshot.hasData) {
+                currentSong = snapshot.data;
+                SongNow().saveSong(currentSong);
+                print('song now ${songnow.name}');
+                return new MBottomTabBar(song: currentSong);
+              }
+              if (snapshot.hasError) {
+                return Container(
+                  height: 5,
+                  color: Colors.blue,
+                );
+              }
+              return new MBottomTabBar(song: snapshot.data);
+            }),
+        body: TabBarView(
+            children: [ListSong(), Container(), Container(), Container()]),
       ),
     );
   }

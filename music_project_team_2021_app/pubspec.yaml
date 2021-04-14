@@ -30,6 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.0
   permission_handler:
   lottie:
+  flutter_media_metadata:
+  audioplayers: ^0.17.4
+  path_provider: ^1.6.28
+  shared_preferences: ^0.5.10
 
 dev_dependencies:
   flutter_test:

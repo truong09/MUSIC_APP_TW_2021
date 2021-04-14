@@ -1,15 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:music_project_team_2021_app/src/constants/temp_varible.dart';
+import 'package:music_project_team_2021_app/src/core/list_singer_to_text.dart';
+import 'package:music_project_team_2021_app/src/core/play_song.dart';
+import 'package:music_project_team_2021_app/src/model/song_model.dart';
 
+// ignore: must_be_immutable
 class PlayHome extends StatefulWidget {
+  Song song;
+  PlayHome({this.song});
   @override
   _PlayHomeState createState() => _PlayHomeState();
 }
 
 class _PlayHomeState extends State<PlayHome> {
   double rate = 0;
+  PlaySong play = PlaySong();
+  Song song;
+  @override
+  // void initState() {
+  //   super.initState();
+  //   if (this.mounted) {
+  //     setState(() {
+  //       song = widget.song;
+  //     });
+  //   }
+
+  //   print('day la song nhan duoc ${song.name}');
+  // }
+
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      song = widget.song;
+      print('day la song nhan duoc ${song.name}');
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -19,6 +45,13 @@ class _PlayHomeState extends State<PlayHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Container(
+              //   alignment: Alignment.topLeft,
+              //   child: IconButton(
+              //     icon: Icon(Icons.keyboard_arrow_down_sharp),
+              //     onPressed: () {},
+              //   ),
+              // ),
               Container(
                 child: Container(
                   decoration: BoxDecoration(
@@ -35,9 +68,9 @@ class _PlayHomeState extends State<PlayHome> {
                 child: Slider(
                     value: rate,
                     onChanged: (newRating) {
-                      setState(() {
-                        rate = newRating;
-                      });
+                      // setState(() {
+                      //   rate = newRating;
+                      // });
                     }),
               ),
               Row(
@@ -52,17 +85,17 @@ class _PlayHomeState extends State<PlayHome> {
                 margin: EdgeInsets.all(20),
                 alignment: Alignment.center,
                 child: Text(
-                  "Nhu phut ban dau eeeeeeeeeeeeeeeeeeeeeeeee",
+                  song.name,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
               Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment.center,
                 child: Text(
-                  "Noo Phuoc Thinh",
+                  singer(song),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.center,

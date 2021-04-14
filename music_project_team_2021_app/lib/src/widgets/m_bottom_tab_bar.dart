@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:music_project_team_2021_app/src/constants/PageRouteAnimation.dart';
+import 'package:music_project_team_2021_app/src/constants/temp_varible.dart';
+import 'package:music_project_team_2021_app/src/core/play_song.dart';
 
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 import 'package:music_project_team_2021_app/src/page/play_home.dart';
 
 // ignore: must_be_immutable
-class MBottomTabBar extends StatelessWidget {
+class MBottomTabBar extends StatefulWidget {
   Song song;
   MBottomTabBar({this.song});
+
+  @override
+  _MBottomTabBarState createState() => _MBottomTabBarState();
+}
+
+class _MBottomTabBarState extends State<MBottomTabBar> {
+  final PlaySong playSongController = PlaySong();
+  @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   songnow = widget.song;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, PageRouteAnimation(PlayHome()));
+          Navigator.push(
+              context, PageRouteAnimation(new PlayHome(song: widget.song)));
         },
         child: Container(
           padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
@@ -38,7 +55,8 @@ class MBottomTabBar extends StatelessWidget {
                 height: 50,
                 width: 50,
                 child: CircleAvatar(
-                    child: Lottie.asset('assets/lotties/sounds.json')),
+                  child: Lottie.asset('assets/lotties/sounds.json'),
+                ),
               ),
               SizedBox(
                 width: 10,
@@ -50,13 +68,14 @@ class MBottomTabBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      song.name,
+                      widget.song != null ? widget.song.name : "",
                       overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      song.singer,
+                      widget.song != null ? widget.song.singer.toString() : "",
+                      overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     )
@@ -67,12 +86,30 @@ class MBottomTabBar extends StatelessWidget {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
-                    child: Container(
-                        height: 40,
-                        child: Image.asset('assets/icons/play.png')),
-                    onTap: () {},
-                  ),
+                  widget.song != null
+                      ? GestureDetector(
+                          child: Container(
+                            height: 40,
+                            child: playSongController.isPlaying == true
+                                ? Image.asset('assets/icons/playing.png')
+                                : Image.asset('assets/icons/play.png'),
+                          ),
+                          onTap: () {
+                            if (this.mounted) {
+                              setState(() {
+                                if (playSongController.isPlaying == true) {
+                                  playSongController.pausePlaying();
+                                  playSongController.isPlaying = false;
+                                } else {
+                                  playSongController.continuePlaying();
+                                  playSongController.isPlaying = true;
+                                }
+                              });
+                            }
+                            print(playSongController.isPlaying);
+                          },
+                        )
+                      : Container(),
                   SizedBox(width: 5),
                   GestureDetector(
                     child: Container(
