@@ -4,8 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SongNow {
   saveSong(Song song) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(sfSongKey, song.name);
+    if (song != null) {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      sharedPreferences.setString(sfSongKey, song.name);
+    }
   }
 
   getSong() async {

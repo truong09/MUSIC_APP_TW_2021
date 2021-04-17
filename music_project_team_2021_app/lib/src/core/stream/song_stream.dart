@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 
+import '../play_song.dart';
+import '../shared_referance/song_now.dart';
+
 class StreamSong {
   Song song = new Song();
 
@@ -14,11 +17,12 @@ class StreamSong {
   StreamSong._internal();
 
   Stream get songStream => songController.stream;
-
+  final PlaySong playSongController = PlaySong();
   changesong(Song newSong) {
     song = newSong;
-    print('day la stream');
-    print(newSong.name);
+    playSongController.pausePlaying();
+    SongNow().saveSong(newSong);
+    playSongController.playSoundNewSong(path: newSong.path);
     songController.sink.add(song);
   }
 

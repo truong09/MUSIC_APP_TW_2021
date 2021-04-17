@@ -5,6 +5,17 @@ import 'package:music_project_team_2021_app/src/core/list_singer_to_text.dart';
 import 'package:music_project_team_2021_app/src/core/play_song.dart';
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../constants/temp_varible.dart';
+import '../core/stream/song_stream.dart';
+import '../core/stream/song_stream.dart';
+import '../core/stream/song_stream.dart';
+
 // ignore: must_be_immutable
 class PlayHome extends StatefulWidget {
   Song song;
@@ -15,19 +26,48 @@ class PlayHome extends StatefulWidget {
 
 class _PlayHomeState extends State<PlayHome> {
   double rate = 0;
-  PlaySong play = PlaySong();
+  PlaySong playSongController = PlaySong();
   Song song;
+  StreamSong _streamSong;
+  var _value = 0.0;
   @override
-  // void initState() {
-  //   super.initState();
-  //   if (this.mounted) {
-  //     setState(() {
-  //       song = widget.song;
-  //     });
-  //   }
+  void initState() {
+    super.initState();
+    _streamSong = StreamSong();
+    setUpDuration();
+  }
 
-  //   print('day la song nhan duoc ${song.name}');
-  // }
+  void setUpDuration() {
+    playSongController.audioPlayer.durationHandler = (d) {
+      if (this.mounted) {
+        setState(() {
+          playSongController.musicLength = d;
+        });
+      }
+    };
+    playSongController.audioPlayer.positionHandler = (p) {
+      if (this.mounted) {
+        setState(() {
+          playSongController.positon = p;
+        });
+      }
+    };
+  }
+
+  Widget slider() {
+    return Slider.adaptive(
+        value: _value,
+        max: playSongController.musicLength.inSeconds.toDouble(),
+        onChanged: (value) {
+          if (this.mounted) {
+            setState(() {
+              _value = value;
+            });
+          }
+          Duration newPos = Duration(seconds: _value.toInt());
+          playSongController.audioPlayer.seek(newPos);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +75,7 @@ class _PlayHomeState extends State<PlayHome> {
       song = widget.song;
       print('day la song nhan duoc ${song.name}');
     });
-
+    _value = playSongController.positon.inSeconds.toDouble();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -65,42 +105,52 @@ class _PlayHomeState extends State<PlayHome> {
                 height: 30,
               ),
               Container(
-                child: Slider(
-                    value: rate,
-                    onChanged: (newRating) {
-                      // setState(() {
-                      //   rate = newRating;
-                      // });
-                    }),
+                child: slider(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("0.0"),
-                  Text("2:28"),
+                  Text(
+                      "${playSongController.positon.inMinutes}:${playSongController.positon.inSeconds.remainder(60)}"),
+                  Text(
+                      '${playSongController.musicLength.inMinutes}:${playSongController.musicLength.inSeconds.remainder(60)}'),
                 ],
               ),
-              Container(
-                margin: EdgeInsets.all(20),
-                alignment: Alignment.center,
-                child: Text(
-                  song.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                alignment: Alignment.center,
-                child: Text(
-                  singer(song),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              StreamBuilder<Song>(
+                  stream: _streamSong.songStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      song = snapshot.data;
+                    }
+
+                    return Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(20),
+                          alignment: Alignment.center,
+                          child: Text(
+                            song.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          alignment: Alignment.center,
+                          child: Text(
+                            singer(song),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -109,6 +159,13 @@ class _PlayHomeState extends State<PlayHome> {
                       width: 20,
                     ),
                     GestureDetector(
+                      onTap: () {
+                        indexOfSongNow--;
+                        if (indexOfSongNow < 0) {
+                          indexOfSongNow = 0;
+                        }
+                        _streamSong.changesong(songsOffline[indexOfSongNow]);
+                      },
                       child: Container(
                         width: 30,
                         height: 30,
@@ -116,13 +173,35 @@ class _PlayHomeState extends State<PlayHome> {
                       ),
                     ),
                     GestureDetector(
+                      onTap: () {
+                        if (this.mounted) {
+                          setState(() {
+                            if (playSongController.isPlaying == true) {
+                              playSongController.pausePlaying();
+                              playSongController.isPlaying = false;
+                            } else {
+                              playSongController.continuePlaying();
+                              playSongController.isPlaying = true;
+                            }
+                          });
+                        }
+                      },
                       child: Container(
                         width: 70,
                         height: 70,
-                        child: Image.asset('assets/icons/play.png'),
+                        child: playSongController.isPlaying == true
+                            ? Image.asset('assets/icons/playing.png')
+                            : Image.asset('assets/icons/play.png'),
                       ),
                     ),
                     GestureDetector(
+                      onTap: () {
+                        indexOfSongNow++;
+                        if (indexOfSongNow >= songsOffline.length) {
+                          indexOfSongNow = 0;
+                        }
+                        _streamSong.changesong(songsOffline[indexOfSongNow]);
+                      },
                       child: Container(
                         width: 30,
                         height: 30,

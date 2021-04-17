@@ -7,6 +7,8 @@ import 'package:music_project_team_2021_app/src/core/play_song.dart';
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 import 'package:music_project_team_2021_app/src/page/play_home.dart';
 
+import '../page/play_home.dart';
+
 // ignore: must_be_immutable
 class MBottomTabBar extends StatefulWidget {
   Song song;
@@ -31,7 +33,14 @@ class _MBottomTabBarState extends State<MBottomTabBar> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context, PageRouteAnimation(new PlayHome(song: widget.song)));
+              context,
+              MaterialPageRoute(
+                builder: (context) => new PlayHome(
+                  song: widget.song,
+                ),
+              )).then((value) {
+            setState(() {});
+          });
         },
         child: Container(
           padding: EdgeInsets.fromLTRB(10, 5, 5, 5),

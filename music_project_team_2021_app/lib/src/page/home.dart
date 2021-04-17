@@ -94,13 +94,20 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: StreamBuilder<Song>(
             stream: songStream.songStream,
             builder: (context, snapshot) {
-              print('day la ket qua');
-              print(snapshot.data);
               if (snapshot.hasData) {
-                currentSong = snapshot.data;
-                SongNow().saveSong(currentSong);
-                print('song now ${songnow.name}');
-                return new MBottomTabBar(song: currentSong);
+                return new MBottomTabBar(song: snapshot.data);
+              } else if (!snapshot.hasData) {
+                FutureBuilder(
+                  future: SongNow().getSong(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return new MBottomTabBar(song: currentSong);
+                    }
+                    return Container(
+                      height: 0.0,
+                    );
+                  },
+                );
               }
               if (snapshot.hasError) {
                 return Container(

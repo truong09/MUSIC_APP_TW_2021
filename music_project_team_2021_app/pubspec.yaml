@@ -34,6 +34,7 @@ dependencies:
   audioplayers: ^0.17.4
   path_provider: ^1.6.28
   shared_preferences: ^0.5.10
+  flutter_media_notification: ^1.2.6
 
 dev_dependencies:
   flutter_test:

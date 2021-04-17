@@ -3,11 +3,13 @@ import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:music_project_team_2021_app/src/core/get_permision.dart';
 import 'package:music_project_team_2021_app/src/model/song_model.dart';
 
+import '../constants/temp_varible.dart';
+
 getLocalMusic() async {
   getPerMision();
   List<Song> song = new List();
   var retriever = new MetadataRetriever();
-  Directory dir = Directory('/storage/emulated/0/Zing MP3');
+  Directory dir = Directory('/storage/emulated/0/CSNMusic/Download/Music');
   String mp3Path = dir.toString();
   print(mp3Path);
   List<FileSystemEntity> _files;
@@ -44,7 +46,7 @@ getLocalMusic() async {
       path: _songs[i].path,
       gener: metadata.genre,
     ));
-    print(song.length);
+    songsOffline = song;
   }
   return song;
 }
