@@ -1,3 +1,4 @@
+import 'package:my_music_app/comon_variable.dart';
 import 'package:my_music_app/model/song.dart';
 
 class TrackLibrary {
@@ -9,9 +10,10 @@ class Track {
   final String author;
   final String title;
   final String id;
+  final String art;
 
-  Track(this.url, this.author, this.title, this.id);
+  Track(this.url, this.author, this.title, this.id, this.art);
   factory Track.fromSong(Song song) {
-    return Track(song.path, song.singer, song.name, song.id);
+    return Track(song.path, song.singer, song.name, song.id, song.artImage);
   }
 }

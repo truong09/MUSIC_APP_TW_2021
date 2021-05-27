@@ -21,6 +21,20 @@ class PlaylistDetail extends StatefulWidget {
 }
 
 class _PlaylistDetailState extends State<PlaylistDetail> {
+  List<dynamic> initIdSong = [];
+  Future<List<Song>> intSong;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initIdSong = widget.songIdOfPlaylist;
+    getSong();
+  }
+
+  Future<List<Song>> getSong() async {
+    return await getSongFromId(initIdSong);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -51,7 +65,7 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
                 child: Stack(children: [
                   Container(
                       child: FutureBuilder(
-                    future: getSongFromId(widget.songIdOfPlaylist),
+                    future: getSong(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<Song> songs = snapshot.data;
@@ -68,14 +82,16 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
                                   onTap: () {
                                     PlaylistService().deleteASongFromPlayList(
                                         songs[index].id, widget.name);
+                                    setState(() {
+                                      initIdSong.remove(songs[index].id);
+                                      getSong();
+                                    });
                                   },
                                 ),
                               ],
                               child: ListTile(
                                 title: Text(songs[index].name),
                                 onTap: () {
-                                  print("dương dẫn phát nhạc");
-                                  print(songs[index].path);
                                   BlocProvider.of<MediaPlayerCubit>(context)
                                       .stopFromIsolate();
                                   print('pause tap');
@@ -97,6 +113,8 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
                             );
                           },
                         );
+                      } else if (!snapshot.hasData) {
+                        return Container();
                       }
                       return Center(
                         child: CircularProgressIndicator(),

@@ -23,7 +23,7 @@ class AudioTrackRepository extends AudioTrackRepositoryAbstract {
     var nextTrack = TrackLibrary.playList[nextTrackIndex];
 
     return AudioTrackModel(nextTrack.url, nextTrack.author, nextTrack.title,
-        nextTrackIndex, nextTrack.id);
+        nextTrackIndex, nextTrack.id, nextTrack.art);
   }
 
   @override
@@ -37,6 +37,6 @@ class AudioTrackRepository extends AudioTrackRepositoryAbstract {
     var prevTrack = TrackLibrary.playList[prevTrackIndex];
 
     return AudioTrackModel(prevTrack.url, prevTrack.author, prevTrack.title,
-        prevTrackIndex, prevTrack.id);
+        prevTrackIndex, prevTrack.id, prevTrack.art);
   }
 }

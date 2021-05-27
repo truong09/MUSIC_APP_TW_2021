@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:my_music_app/comon_variable.dart';
 import 'package:my_music_app/core/find_element.dart';
 import 'package:my_music_app/model/helpers/song_hepler.dart';
+import 'package:my_music_app/model/singer.dart';
 import 'package:my_music_app/model/song.dart';
 
 class SongService {
@@ -47,14 +49,16 @@ class SongService {
 
   getAlbumName() async {
     List<String> album = [];
+
     await ref.get().then((value) {
       value.docs.forEach((element) {
-        print(element['album'].toString());
-        if (findAlbumNameExist(element['album'], album) == false) {
+        if (!album.contains(element['album'])) {
           album.add(element['album']);
+          print(element);
         }
       });
     });
+
     print(album.length);
     return album;
   }
@@ -77,23 +81,51 @@ class SongService {
   }
 
   getSingerName() async {
-    List<String> album = [];
+    List<String> singer = [];
     await ref.get().then((value) {
       value.docs.forEach((element) {
-        print(element['singer'].toString());
-        if (findAlbumNameExist(element['singer'], album) == false) {
-          album.add(element['singer']);
+        if (!singer.contains(element['singer'])) {
+          singer.add(element['singer']);
         }
       });
     });
 
-    return album;
+    List<Singer> sing = [];
+    String path;
+    for (int i = 0; i < singer.length; i++) {
+      await ref
+          .where('singer', isEqualTo: singer[i])
+          .limit(1)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          path = element.data()["artImage"];
+          print(path);
+        });
+      });
+      if (path == null || path == "") {
+        path = defaultImage;
+      }
+      sing.add(Singer(name: singer[i], img: path));
+    }
+    for (int i = 0; i < sing.length; i++) {
+      print("${sing[i].name}: ${sing[i].img}");
+    }
+    return sing;
   }
 
-  getSongInSinger(String albumName) async {
+  getArtImageForSinger(String singer) async {
+    await ref.where('singer', isEqualTo: singer).limit(1).get().then((value) {
+      value.docs.forEach((element) {
+        return element.data()["artImage"];
+      });
+    });
+  }
+
+  getSongInSinger(String singer) async {
     List<Song> songs = [];
 
-    await ref.where('singer', isEqualTo: albumName).get().then((value) {
+    await ref.where('singer', isEqualTo: singer).get().then((value) {
       value.docs.forEach((element) {
         songs.add(Song.fromJson(element.data()));
       });
@@ -136,7 +168,7 @@ class SongService {
 
   Future<List<Song>> getNewSong() async {
     List<Song> temp = [];
-    await ref.orderBy("upload_date", descending: false).get().then((value) {
+    await ref.orderBy("upload_date", descending: true).get().then((value) {
       value.docs.forEach((element) {
         // print(element.data());
         temp.add(Song.fromJson(element.data()));

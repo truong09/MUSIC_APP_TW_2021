@@ -1,14 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_music_app/comon_variable.dart';
 import 'package:my_music_app/features/media_player/bloc/media_player_cubit.dart';
 import 'package:my_music_app/features/media_player/playing_position_cudit/playing_position_cubit.dart';
 import 'package:my_music_app/injection_container.dart';
 import 'package:my_music_app/music_player/music_player.dart';
 
-class MiniBar extends StatelessWidget {
+class MiniBar extends StatefulWidget {
+  @override
+  _MiniBarState createState() => _MiniBarState();
+}
+
+class _MiniBarState extends State<MiniBar> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final mediaQuery = MediaQuery.of(context);
 
     return MultiBlocProvider(
       providers: [
@@ -22,7 +29,33 @@ class MiniBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MusicPlayer(),
-                ));
+                )).then((value) {
+              print("da quay lai");
+              if (secondGV > 0 && isTimed == true) {
+                // Timer timer;
+                Future.delayed(Duration(seconds: secondGV), () {
+                  BlocProvider.of<MediaPlayerCubit>(context).pause();
+                  if (this.mounted) {
+                    setState(() {
+                      isTimed = false;
+                    });
+                  }
+                });
+
+                Timer.periodic(Duration(seconds: 1), (value) {
+                  if (this.mounted) {
+                    setState(() {
+                      if (secondGV > 0) {
+                        secondGV--;
+                        print(secondGV);
+                      } else {
+                        value.cancel();
+                      }
+                    });
+                  }
+                });
+              }
+            });
           },
           child: Container(
             height: MediaQuery.of(context).size.height * 0.1,
@@ -47,7 +80,7 @@ class MiniBar extends StatelessWidget {
                         ),
                         Text(
                           mediaPlayerState.audioTrack?.author ??
-                              'no selected track',
+                              'Không có ca sĩ',
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: TextStyle(color: theme.hintColor),

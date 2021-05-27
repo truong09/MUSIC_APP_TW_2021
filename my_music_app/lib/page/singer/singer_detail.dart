@@ -16,7 +16,7 @@ class SingerDetail extends StatefulWidget {
 }
 
 class _SingerDetailState extends State<SingerDetail> {
-  List<Song> songs = [];
+  List<Song> singers = [];
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -42,12 +42,12 @@ class _SingerDetailState extends State<SingerDetail> {
                       future: SongService().getSongInSinger(widget.name),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          songs = snapshot.data;
+                          singers = snapshot.data;
                           return ListView.builder(
-                            itemCount: songs.length,
+                            itemCount: singers.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                title: Text(songs[index].name),
+                                title: Text(singers[index].name),
                                 onTap: () {
                                   BlocProvider.of<MediaPlayerCubit>(context)
                                       .stopFromIsolate();
@@ -55,7 +55,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                   TrackLibrary.playList = {};
 
                                   TrackLibrary.playList =
-                                      convertSongToTrack(songs, index);
+                                      convertSongToTrack(singers, index);
 
                                   TrackLibrary.playList.forEach((key, value) {
                                     print("$key, ${value.title}");
@@ -64,7 +64,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                   BlocProvider.of<MediaPlayerCubit>(context)
                                       .play();
                                   print("tap play");
-                                  SongService().updateFigure(songs[index].id);
+                                  SongService().updateFigure(singers[index].id);
                                 },
                               );
                             },

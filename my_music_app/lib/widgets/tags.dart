@@ -14,6 +14,7 @@ class Mtag extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(10),
         height: MediaQuery.of(context).size.height * 0.1,
+        width: MediaQuery.of(context).size.height * 0.2,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.white,

@@ -43,6 +43,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     getCheckNotificationPermStatus();
     super.initState();
+    AudioService.connect();
   }
 
   getCheckNotificationPermStatus() async {

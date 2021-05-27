@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_music_app/model/service/song_service.dart';
+import 'package:my_music_app/model/singer.dart';
 import 'package:my_music_app/page/singer/singer_detail.dart';
+import '../../comon_variable.dart';
 import 'file:///E:/FlutterProjects/my_music_app/lib/page/album/album_detail.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
@@ -23,19 +25,25 @@ class _SingerPageState extends State<SingerPage> {
                 future: SongService().getSingerName(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<String> singerName = snapshot.data;
+                    List<Singer> singers = snapshot.data;
                     return ListView.builder(
-                      itemCount: singerName.length,
+                      itemCount: singers.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          leading: Icon(Icons.home),
-                          title: Text(singerName[index]),
+                          leading: Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.network(
+                                singers[index].img,
+                                fit: BoxFit.cover,
+                              )),
+                          title: Text(singers[index].name),
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SingerDetail(
-                                    name: singerName[index],
+                                    name: singers[index].name,
                                   ),
                                 ));
                           },

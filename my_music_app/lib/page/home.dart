@@ -24,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: MDrawer(),
       body: SafeArea(
           child: Stack(children: [
-        pages[_currentIndex],
+        Container(child: pages[_currentIndex]),
         Positioned(
           child: MiniBar(),
           bottom: 0,
