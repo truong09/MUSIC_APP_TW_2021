@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_music_app/core/convert.dart';
+import 'package:my_music_app/core/search_song.dart';
 import 'package:my_music_app/data/track_library.dart';
 import 'package:my_music_app/features/media_player/bloc/media_player_cubit.dart';
 import 'package:my_music_app/injection_container.dart';
@@ -12,15 +13,23 @@ import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/firstSong.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
-class SingerDetail extends StatefulWidget {
-  Singer singer;
-  SingerDetail({this.singer});
+class GenderDetail extends StatefulWidget {
+  String genderName;
+  GenderDetail({this.genderName});
   @override
-  _SingerDetailState createState() => _SingerDetailState();
+  _GenderDetailState createState() => _GenderDetailState();
 }
 
-class _SingerDetailState extends State<SingerDetail> {
-  List<Song> singers = [];
+class _GenderDetailState extends State<GenderDetail> {
+  List<Song> songs = [];
+  List<Song> temp = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -38,7 +47,7 @@ class _SingerDetailState extends State<SingerDetail> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 title: Text(
-                  "Banh sách bài hát nổi bật",
+                  "Danh sách cùng thể loại",
                   style: TextStyle(color: Colors.blue),
                 ),
                 centerTitle: true,
@@ -47,17 +56,20 @@ class _SingerDetailState extends State<SingerDetail> {
                 child: Stack(children: [
                   Container(
                     child: FutureBuilder(
-                      future: SongService().getSongInSinger(widget.singer.name),
+                      future: SongService().getSongInGender(widget.genderName),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          singers = snapshot.data;
+                          songs = snapshot.data;
+                          if (temp.length == 0) {
+                            temp = songs;
+                          }
+                          // temp = findByName("", songs);
                           return Column(
                             children: [
                               Expanded(
                                 flex: 1,
                                 child: BackgSinger(
-                                  name: widget.singer.name,
-                                  img: widget.singer.img,
+                                  name: widget.genderName,
                                   onpressed: () {
                                     BlocProvider.of<MediaPlayerCubit>(context)
                                         .stopFromIsolate();
@@ -65,7 +77,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                     TrackLibrary.playList = {};
 
                                     TrackLibrary.playList =
-                                        convertSongToTrack(singers, 0);
+                                        convertSongToTrack(songs, 0);
 
                                     TrackLibrary.playList.forEach((key, value) {
                                       print("$key, ${value.title}");
@@ -74,19 +86,27 @@ class _SingerDetailState extends State<SingerDetail> {
                                     BlocProvider.of<MediaPlayerCubit>(context)
                                         .play();
                                     print("tap play");
-                                    SongService().updateFigure(singers[0].id);
+                                    SongService().updateFigure(songs[0].id);
                                   },
                                 ),
                               ),
-                              Divider(
-                                height: 100,
-                                thickness: 1,
-                                color: Colors.blue,
+                              Container(
+                                child: TextField(
+                                  onChanged: (value) {
+                                    setState(() {
+                                      temp = findByName(value, songs);
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          "Nhập tìm kiếm theo tên bài hát, tên ca sĩ",
+                                      prefixIcon: Icon(Icons.search)),
+                                ),
                               ),
                               Expanded(
                                 flex: 2,
                                 child: ListView.builder(
-                                  itemCount: singers.length,
+                                  itemCount: temp.length,
                                   itemBuilder: (context, index) {
                                     return Slidable(
                                         secondaryActions: [
@@ -96,7 +116,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                             icon: Icons.playlist_add,
                                             onTap: () {
                                               addSongToPlaylist(
-                                                  context, singers[index].id);
+                                                  context, temp[index].id);
                                             },
                                           ),
                                         ],
@@ -104,7 +124,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                         child: ListTile(
                                           trailing:
                                               Icon(Icons.sync_alt_outlined),
-                                          title: Text(singers[index].name),
+                                          title: Text(temp[index].name),
                                           onTap: () {
                                             BlocProvider.of<MediaPlayerCubit>(
                                                     context)
@@ -113,8 +133,7 @@ class _SingerDetailState extends State<SingerDetail> {
                                             TrackLibrary.playList = {};
 
                                             TrackLibrary.playList =
-                                                convertSongToTrack(
-                                                    singers, index);
+                                                convertSongToTrack(temp, index);
 
                                             TrackLibrary.playList
                                                 .forEach((key, value) {
@@ -125,8 +144,8 @@ class _SingerDetailState extends State<SingerDetail> {
                                                     context)
                                                 .play();
                                             print("tap play");
-                                            SongService().updateFigure(
-                                                singers[index].id);
+                                            SongService()
+                                                .updateFigure(temp[index].id);
                                           },
                                         ));
                                   },

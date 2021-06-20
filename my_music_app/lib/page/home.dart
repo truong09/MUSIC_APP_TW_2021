@@ -14,23 +14,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  List<Widget> pages = [OfflinePage(), OnlinePage(), SearchPage()];
-  List<String> titles = ["Nhạc của tôi", "Nhạc trực tuyến", "Tìm kiếm"];
+  List<Widget> pages = [OfflinePage(), OnlinePage(), SearchPage(), MPerson()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(titles[_currentIndex])),
-      drawer: MDrawer(),
       body: SafeArea(
           child: Stack(children: [
-        Container(child: pages[_currentIndex]),
-        Positioned(
-          child: MiniBar(),
-          bottom: 0,
-          right: 0,
-          left: 0,
-        ),
+        Container(
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: pages[_currentIndex]),
+        _currentIndex == 3
+            ? Container()
+            : Positioned(
+                child: MiniBar(),
+                bottom: 0,
+                right: 0,
+                left: 0,
+              ),
       ])),
       bottomNavigationBar: BottomNavyBar(
         selectedIndex: _currentIndex,
@@ -40,13 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
         onItemSelected: (index) => setState(() => _currentIndex = index),
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            icon: Icon(Icons.home_work),
+            icon: Icon(Icons.home),
             title: Text('Trang chủ'),
             activeColor: Colors.red,
             textAlign: TextAlign.center,
           ),
           BottomNavyBarItem(
-            icon: Icon(Icons.online_prediction),
+            icon: Icon(Icons.bar_chart),
             title: Text('BXH'),
             activeColor: Colors.purpleAccent,
             textAlign: TextAlign.center,
@@ -55,6 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.search),
             title: Text(
               'Tìm kiếm',
+            ),
+            activeColor: Colors.pink,
+            textAlign: TextAlign.center,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.person),
+            title: Text(
+              'Tôi',
             ),
             activeColor: Colors.pink,
             textAlign: TextAlign.center,

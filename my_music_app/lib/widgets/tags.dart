@@ -13,9 +13,10 @@ class Mtag extends StatelessWidget {
       onTap: onpressed,
       child: Container(
         margin: EdgeInsets.all(10),
-        height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.height * 0.2,
-        alignment: Alignment.center,
+        padding: EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height * 0.11,
+        width: MediaQuery.of(context).size.width / 4,
+        alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -32,17 +33,14 @@ class Mtag extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               icon,
               size: 30,
               color: color,
-            ),
-            SizedBox(
-              width: 20,
             ),
             Text(
               lable,

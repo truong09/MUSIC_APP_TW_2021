@@ -1,37 +1,64 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_music_app/core/text_avatar.dart';
 import 'package:my_music_app/page/login.dart';
 
-class MDrawer extends StatelessWidget {
+class MPerson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return SafeArea(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.5,
+        margin: EdgeInsets.fromLTRB(20, 50, 20, 20),
+        width: MediaQuery.of(context).size.width,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 5,
-              child: CircleAvatar(
-                child: Text("A"),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+                // borderRadius: BorderRadius.circular()
+              ),
+              height: MediaQuery.of(context).size.width * 0.3,
+              child: Text(
+                textToAvatar(),
+                style: TextStyle(fontSize: 50),
               ),
             ),
-            Expanded(
-              child: Text(FirebaseAuth.instance.currentUser.email),
+            SizedBox(
+              height: 20,
             ),
-            Expanded(
-                child: TextButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Login(),
-                    ),
-                    (route) => false);
-              },
-              child: Text("Đăng xuất"),
-            ))
+            Container(
+              child: Text(
+                FirebaseAuth.instance.currentUser.email,
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            SizedBox(
+              height: 250,
+            ),
+            Container(
+              child: TextButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(),
+                      ),
+                      (route) => false);
+                },
+                child: Text(
+                  "Đăng xuất",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ),
+            Expanded(child: Container()),
+            Text(
+              "Copyright @2021",
+            ),
           ],
         ),
       ),

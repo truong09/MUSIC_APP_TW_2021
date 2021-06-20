@@ -59,7 +59,20 @@ class _MiniBarState extends State<MiniBar> {
           },
           child: Container(
             height: MediaQuery.of(context).size.height * 0.1,
-            color: theme.colorScheme.primaryVariant,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    spreadRadius: 3,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
@@ -80,7 +93,7 @@ class _MiniBarState extends State<MiniBar> {
                         ),
                         Text(
                           mediaPlayerState.audioTrack?.author ??
-                              'Không có ca sĩ',
+                              'Không có bài hát nào đang phát',
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
                           style: TextStyle(color: theme.hintColor),

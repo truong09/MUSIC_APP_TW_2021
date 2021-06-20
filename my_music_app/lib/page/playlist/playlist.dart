@@ -17,6 +17,7 @@ class _PLaylistPageState extends State<PLaylistPage> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 50),
         child: StreamBuilder(
           stream: PlaylistService().getMyPlaylist(),
           builder: (context, snapshot) {
@@ -42,7 +43,11 @@ class _PLaylistPageState extends State<PLaylistPage> {
                       ),
                     ],
                     child: ListTile(
-                      title: Text(name[index]),
+                      trailing: Icon(Icons.more_vert_sharp),
+                      title: Text(
+                        name[index],
+                        style: TextStyle(fontSize: 18),
+                      ),
                       onTap: () {
                         print("${result[name[index]]}");
                         // PlaylistService().getAllSongOfAPlaylist(name[index]);

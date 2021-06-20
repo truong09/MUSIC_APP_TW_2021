@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_music_app/core/convert.dart';
 import 'package:my_music_app/data/track_library.dart';
 import 'package:my_music_app/features/media_player/bloc/media_player_cubit.dart';
 import 'package:my_music_app/injection_container.dart';
 import 'package:my_music_app/model/service/song_service.dart';
 import 'package:my_music_app/model/song.dart';
+import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
 class AlbumDetail extends StatefulWidget {
@@ -25,22 +27,18 @@ class _AlbumDetailState extends State<AlbumDetail> {
       ],
       child: BlocBuilder<MediaPlayerCubit, MediaPlayerStateAbstract>(
         builder: (context, mediaPlayerState) {
-          var _playCallback = () async {
-            print('play tap');
-          };
-
-          var _pauseCallback = () {
-            BlocProvider.of<MediaPlayerCubit>(context).pause();
-            print('pause tap');
-          };
           return MaterialApp(
             home: Scaffold(
               appBar: AppBar(
+                backgroundColor: Colors.white,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  icon: Icon(Icons.arrow_back, color: Colors.blue),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
-                title: Text(widget.name),
+                title: Text(
+                  widget.name,
+                  style: TextStyle(color: Colors.blue, fontSize: 20),
+                ),
                 centerTitle: true,
               ),
               body: SafeArea(
@@ -52,32 +50,50 @@ class _AlbumDetailState extends State<AlbumDetail> {
                         if (snapshot.hasData) {
                           songs = snapshot.data;
                           return ListView.builder(
-                            itemCount: songs.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(songs[index].name),
-                                onTap: () {
-                                  BlocProvider.of<MediaPlayerCubit>(context)
-                                      .stopFromIsolate();
-                                  print('pause tap');
-                                  TrackLibrary.playList = {};
+                              itemCount: songs.length,
+                              itemBuilder: (context, index) {
+                                return Slidable(
+                                  secondaryActions: [
+                                    IconSlideAction(
+                                      caption: 'Playlist',
+                                      color: Colors.blue,
+                                      icon: Icons.playlist_add,
+                                      onTap: () {
+                                        addSongToPlaylist(
+                                            context, songs[index].id);
+                                      },
+                                    ),
+                                  ],
+                                  actionPane: SlidableDrawerActionPane(),
+                                  child: ListTile(
+                                    title: Text(songs[index].name),
+                                    trailing: Icon(Icons.sync_alt_outlined),
+                                    onTap: () {
+                                      print("album detail");
+                                      BlocProvider.of<MediaPlayerCubit>(context)
+                                          .stopFromIsolate();
+                                      print('pause tap');
+                                      TrackLibrary.playList = {};
 
-                                  TrackLibrary.playList =
-                                      convertSongToTrack(songs, index);
+                                      TrackLibrary.playList =
+                                          convertSongToTrack(songs, index);
 
-                                  TrackLibrary.playList.forEach((key, value) {
-                                    print("$key, ${value.title}");
-                                  });
+                                      TrackLibrary.playList
+                                          .forEach((key, value) {
+                                        print("$key, ${value.title}");
+                                      });
 
-                                  BlocProvider.of<MediaPlayerCubit>(context)
-                                      .play();
-                                  print("tap play");
-                                  SongService().updateFigure(songs[index].id);
-                                },
-                              );
-                            },
-                          );
+                                      BlocProvider.of<MediaPlayerCubit>(context)
+                                          .play();
+                                      print("tap play");
+                                      SongService()
+                                          .updateFigure(songs[index].id);
+                                    },
+                                  ),
+                                );
+                              });
                         }
+
                         return Center(
                           child: CircularProgressIndicator(),
                         );

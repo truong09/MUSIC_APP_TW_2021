@@ -58,6 +58,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
         idnow = mediaPlayerState.audioTrack?.id ?? "0";
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           home: Scaffold(
             body: SafeArea(
               child: Container(
@@ -97,7 +98,9 @@ class _MusicPlayerState extends State<MusicPlayer> {
                                                     .width *
                                                 0.8,
                                             child: Image.network(
-                                              mediaPlayerState.audioTrack.art,
+                                              mediaPlayerState
+                                                      .audioTrack?.art ??
+                                                  defaultImage,
                                               fit: BoxFit.cover,
                                             )),
                                         (() {
@@ -363,7 +366,9 @@ class _OptionMenuState extends State<OptionMenu> {
         children: [
           TextButton(
             onPressed: () {
-              print('loop');
+              setState(() {
+                loop = !loop;
+              });
             },
             style: ButtonStyle(
               minimumSize: MaterialStateProperty.all(Size(40, 40)),

@@ -3,16 +3,17 @@ import 'package:my_music_app/core/search_album.dart';
 import 'package:my_music_app/model/service/song_service.dart';
 
 import 'package:my_music_app/model/singer.dart';
+import 'package:my_music_app/page/gender/gender_detail.dart';
 import 'package:my_music_app/page/singer/singer_detail.dart';
 
-class SingerPage extends StatefulWidget {
+class GenderPage extends StatefulWidget {
   @override
-  _SingerPageState createState() => _SingerPageState();
+  _GenderPageState createState() => _GenderPageState();
 }
 
-class _SingerPageState extends State<SingerPage> {
-  List<Singer> singerName = [];
-  List<Singer> temp = [];
+class _GenderPageState extends State<GenderPage> {
+  List<String> genderName = [];
+  List<String> temp = [];
   String word;
 
   @override
@@ -26,7 +27,7 @@ class _SingerPageState extends State<SingerPage> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            "Ca sĩ",
+            "Thể loại",
             style: TextStyle(color: Colors.blue),
           ),
           centerTitle: true,
@@ -38,7 +39,7 @@ class _SingerPageState extends State<SingerPage> {
               width: MediaQuery.of(context).size.width,
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: "Tìm theo tên ca sĩ",
+                  hintText: "Tìm theo tên thể loại",
                   prefixIcon: Icon(Icons.search),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -58,30 +59,24 @@ class _SingerPageState extends State<SingerPage> {
               // height: MediaQuery.of(context).size.height,
               // width: MediaQuery.of(context).size.width,
               child: FutureBuilder(
-                  future: SongService().getSingerName(),
+                  future: SongService().getGenrderName(),
                   builder: (context, snapshot) {
                     print(snapshot.data.toString());
                     if (snapshot.hasData) {
                       temp = snapshot.data;
-                      singerName = findSinger(word, temp);
+                      genderName = findGender(word, temp);
                       return ListView.builder(
-                        itemCount: singerName.length,
+                        itemCount: genderName.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            leading: Container(
-                                width: 50,
-                                height: 50,
-                                child: Image.network(
-                                  singerName[index].img,
-                                  fit: BoxFit.cover,
-                                )),
-                            title: Text(singerName[index].name),
+                            title: Text(genderName[index]),
                             onTap: () {
+                              print("${genderName[index]}a");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SingerDetail(
-                                      singer: singerName[index],
+                                    builder: (context) => GenderDetail(
+                                      genderName: genderName[index],
                                     ),
                                   ));
                             },

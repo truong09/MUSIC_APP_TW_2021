@@ -148,10 +148,12 @@ class MediaPlayerCubit extends Cubit<MediaPlayerStateAbstract> {
         _addActionToAudioService(() => _addTrackAndPlay(_audioTrack));
       } else {
         errorBarCubit.show('no tracks in library');
+        pause();
       }
     } else {
       _addActionToAudioService(
           () => AudioService.customAction(AudioPlayerTask.RESUME_ACTION));
+      pause();
     }
     emit(MediaPlayerPlayingState(_audioTrack));
   }
@@ -210,6 +212,7 @@ class MediaPlayerCubit extends Cubit<MediaPlayerStateAbstract> {
         _addActionToAudioService(() => _addTrackAndPlay(nextTrack));
       } else {
         errorBarCubit.show('no more tracks');
+        pause();
       }
     }
   }
@@ -226,6 +229,7 @@ class MediaPlayerCubit extends Cubit<MediaPlayerStateAbstract> {
         _addTrackAndPlay(prevTrack);
       } else {
         errorBarCubit.show('no previouse tracks');
+        pause();
       }
     }
   }

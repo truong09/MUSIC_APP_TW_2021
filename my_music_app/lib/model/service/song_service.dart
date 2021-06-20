@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:my_music_app/comon_variable.dart';
-import 'package:my_music_app/core/find_element.dart';
-import 'package:my_music_app/model/helpers/song_hepler.dart';
+
 import 'package:my_music_app/model/singer.dart';
 import 'package:my_music_app/model/song.dart';
 
@@ -54,12 +53,10 @@ class SongService {
       value.docs.forEach((element) {
         if (!album.contains(element['album'])) {
           album.add(element['album']);
-          print(element);
         }
       });
     });
 
-    print(album.length);
     return album;
   }
 
@@ -84,34 +81,47 @@ class SongService {
     List<String> singer = [];
     await ref.get().then((value) {
       value.docs.forEach((element) {
-        if (!singer.contains(element['singer'])) {
-          singer.add(element['singer']);
+        if (!singer.contains(element.data()['singer']) &&
+            element.data()['singer'] != null) {
+          singer.add(element.data()['singer']);
+          // print("${element.data()['singer']}");
         }
       });
     });
 
     List<Singer> sing = [];
     String path;
-    for (int i = 0; i < singer.length; i++) {
-      await ref
-          .where('singer', isEqualTo: singer[i])
+    await Future.wait(List.generate(singer.length, (index) async {
+      return await ref
+          .where('singer', isEqualTo: singer[index])
           .limit(1)
           .get()
           .then((value) {
         value.docs.forEach((element) {
           path = element.data()["artImage"];
-          print(path);
+          if (path == null || path == "") {
+            path = defaultImage;
+          }
+          sing.add(Singer(name: singer[index], img: path));
         });
       });
-      if (path == null || path == "") {
-        path = defaultImage;
-      }
-      sing.add(Singer(name: singer[i], img: path));
-    }
-    for (int i = 0; i < sing.length; i++) {
-      print("${sing[i].name}: ${sing[i].img}");
-    }
+    }));
+    print(sing.length);
     return sing;
+  }
+
+  getGenrderName() async {
+    List<String> genderName = [];
+    await ref.get().then((value) {
+      value.docs.forEach((element) {
+        if (!genderName.contains(element.data()['gender']) &&
+            element.data()['gender'] != null) {
+          genderName.add(element.data()['gender']);
+        }
+      });
+    });
+
+    return genderName;
   }
 
   getArtImageForSinger(String singer) async {
@@ -139,6 +149,23 @@ class SongService {
     return songs;
   }
 
+  Future<List<Song>> getSongInGender(String gender) async {
+    List<Song> songs = [];
+
+    await ref.where('gender', isEqualTo: gender).get().then((value) {
+      value.docs.forEach((element) {
+        songs.add(Song.fromJson(element.data()));
+      });
+    });
+    for (int i = 0; i < songs.length; i++) {
+      final ref = FirebaseStorage.instance.ref().child("${songs[i].id}.mp3");
+      await ref.getDownloadURL().then((value) {
+        songs[i].path = value;
+      });
+    }
+    return songs;
+  }
+
   Future<List<Song>> getTopSong() async {
     List<Song> temp = [];
     await ref
@@ -150,6 +177,9 @@ class SongService {
         // print(element.data());
 
         Song tempSong = Song.fromJson(element.data());
+        if (tempSong.artImage == "" || tempSong.artImage == null) {
+          tempSong.artImage = defaultImage;
+        }
         temp.add(tempSong);
       });
       // print(path);
@@ -168,19 +198,36 @@ class SongService {
 
   Future<List<Song>> getNewSong() async {
     List<Song> temp = [];
-    await ref.orderBy("upload_date", descending: true).get().then((value) {
+    await ref
+        .orderBy("upload_date", descending: true)
+        .limit(10)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
-        // print(element.data());
-        temp.add(Song.fromJson(element.data()));
+        Song tempSong = Song.fromJson(element.data());
+        if (tempSong.artImage == "" || tempSong.artImage == null) {
+          tempSong.artImage = defaultImage;
+        }
+        temp.add(tempSong);
       });
     });
-    Future.wait(List.generate(temp.length, (index) {
+    await Future.wait(List.generate(temp.length, (index) {
       var reff = FirebaseStorage.instance.ref().child("${temp[index].id}.mp3");
       return reff.getDownloadURL().then((value) {
         temp[index].path = value;
       });
     }));
+
     return temp;
+  }
+
+  chartSong() async {
+    List<Song> newSong = [];
+    await getNewSong().then((value) => newSong = value);
+    print(newSong.length);
+    newSong.sort((a, b) => b.figure.compareTo(a.figure));
+
+    return newSong;
   }
 
   updateFigure(String id) async {
@@ -194,5 +241,25 @@ class SongService {
             (value) {
       print("da tang luot nghe");
     });
+  }
+
+  getAllSong() async {
+    List<Song> temp = [];
+    await ref.get().then((value) {
+      value.docs.forEach((element) {
+        Song tempSong = Song.fromJson(element.data());
+        if (tempSong.artImage == "" || tempSong.artImage == null) {
+          tempSong.artImage = defaultImage;
+        }
+        temp.add(tempSong);
+      });
+    });
+    await Future.wait(List.generate(temp.length, (index) {
+      var reff = FirebaseStorage.instance.ref().child("${temp[index].id}.mp3");
+      return reff.getDownloadURL().then((value) {
+        temp[index].path = value;
+      });
+    }));
+    return temp;
   }
 }
