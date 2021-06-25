@@ -13,6 +13,7 @@ import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/firstSong.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
+// ignore: must_be_immutable
 class GenderDetail extends StatefulWidget {
   String genderName;
   GenderDetail({this.genderName});
@@ -25,7 +26,6 @@ class _GenderDetailState extends State<GenderDetail> {
   List<Song> temp = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     init();
   }

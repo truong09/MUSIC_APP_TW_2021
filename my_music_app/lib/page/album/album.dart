@@ -15,7 +15,6 @@ class _AlbumPageState extends State<AlbumPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     intAlbum();
   }

@@ -21,7 +21,6 @@ class _SearchPageState extends State<SearchPage> {
   List<Song> temp = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initSong();
   }

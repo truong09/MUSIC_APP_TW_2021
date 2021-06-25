@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_music_app/model/AuthenticationFirebase.dart';
-import 'package:my_music_app/model/service/song_service.dart';
+
 import 'package:my_music_app/page/home.dart';
 import 'package:my_music_app/page/signup.dart';
 

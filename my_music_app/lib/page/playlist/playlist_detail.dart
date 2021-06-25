@@ -25,7 +25,6 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
   Future<List<Song>> intSong;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initIdSong = widget.songIdOfPlaylist;
     getSong();
@@ -43,14 +42,6 @@ class _PlaylistDetailState extends State<PlaylistDetail> {
       ],
       child: BlocBuilder<MediaPlayerCubit, MediaPlayerStateAbstract>(
         builder: (context, mediaPlayerState) {
-          var _playCallback = () async {
-            print('play tap');
-          };
-
-          var _pauseCallback = () {
-            BlocProvider.of<MediaPlayerCubit>(context).pause();
-            print('pause tap');
-          };
           return MaterialApp(
             home: Scaffold(
               appBar: AppBar(

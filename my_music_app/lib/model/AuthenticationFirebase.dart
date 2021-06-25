@@ -5,8 +5,7 @@ class AuthenticationService {
   AuthenticationService();
   Future<String> signIn({String email, String password}) async {
     try {
-      var result = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
       if (auth.currentUser.uid != null) {
         print("da dang nhap thanh cong");
         return "Signed In";
@@ -18,6 +17,7 @@ class AuthenticationService {
         print('Wrong password provided for that user.');
       }
     }
+    return null;
   }
 
   Future<String> signUp({String email, String password}) async {
@@ -28,5 +28,6 @@ class AuthenticationService {
     } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
+    return null;
   }
 }

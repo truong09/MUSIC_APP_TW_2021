@@ -10,6 +10,7 @@ import 'package:my_music_app/model/song.dart';
 import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
+// ignore: must_be_immutable
 class AlbumDetail extends StatefulWidget {
   String name;
   AlbumDetail({this.name});

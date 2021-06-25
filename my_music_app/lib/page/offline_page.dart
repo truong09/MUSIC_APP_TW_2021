@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_music_app/page/album/album.dart';
-import 'package:my_music_app/page/album/album_detail.dart';
+
 import 'package:my_music_app/page/gender/gender.dart';
 
 import 'package:my_music_app/page/playlist/playlist.dart';

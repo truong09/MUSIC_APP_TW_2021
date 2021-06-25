@@ -12,6 +12,7 @@ import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/firstSong.dart';
 import 'package:my_music_app/widgets/minibar.dart';
 
+// ignore: must_be_immutable
 class SingerDetail extends StatefulWidget {
   Singer singer;
   SingerDetail({this.singer});

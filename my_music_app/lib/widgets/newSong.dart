@@ -21,14 +21,6 @@ class _NewSongState extends State<NewSong> {
       ],
       child: BlocBuilder<MediaPlayerCubit, MediaPlayerStateAbstract>(
         builder: (context, mediaPlayerState) {
-          var _playCallback = () async {
-            print('play tap');
-          };
-
-          var _pauseCallback = () {
-            BlocProvider.of<MediaPlayerCubit>(context).pause();
-            print('pause tap');
-          };
           return Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: FutureBuilder(

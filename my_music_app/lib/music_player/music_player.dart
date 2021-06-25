@@ -350,6 +350,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
   }
 }
 
+// ignore: must_be_immutable
 class OptionMenu extends StatefulWidget {
   Function callback;
   OptionMenu({this.callback});

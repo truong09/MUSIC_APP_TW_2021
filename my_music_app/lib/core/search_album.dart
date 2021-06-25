@@ -1,5 +1,4 @@
 import 'package:my_music_app/model/singer.dart';
-import 'package:my_music_app/model/song.dart';
 
 findAlbumByName(String words, List<String> list) {
   List<String> temp = [];

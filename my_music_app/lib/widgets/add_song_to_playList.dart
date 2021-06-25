@@ -4,7 +4,6 @@ import 'package:my_music_app/model/service/playlist_service.dart';
 import 'package:my_music_app/widgets/add_new_playlist.dart';
 
 addSongToPlaylist(BuildContext context, String id) {
-  TextEditingController text = TextEditingController();
   return showDialog(
     context: context,
     builder: (context) {
