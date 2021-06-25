@@ -7,7 +7,7 @@ import 'package:my_music_app/data/track_library.dart';
 import 'package:my_music_app/features/media_player/bloc/media_player_cubit.dart';
 import 'package:my_music_app/injection_container.dart';
 import 'package:my_music_app/model/service/song_service.dart';
-import 'package:my_music_app/model/singer.dart';
+
 import 'package:my_music_app/model/song.dart';
 import 'package:my_music_app/widgets/add_song_to_playList.dart';
 import 'package:my_music_app/widgets/firstSong.dart';

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_music_app/core/search_album.dart';
 import 'package:my_music_app/model/service/song_service.dart';
-import 'file:///E:/FlutterProjects/my_music_app/lib/page/album/album_detail.dart';
-import 'package:my_music_app/widgets/minibar.dart';
+import 'package:my_music_app/page/album/album_detail.dart';
 
 class AlbumPage extends StatefulWidget {
   @override

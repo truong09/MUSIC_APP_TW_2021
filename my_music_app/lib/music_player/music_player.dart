@@ -374,7 +374,8 @@ class _OptionMenuState extends State<OptionMenu> {
               minimumSize: MaterialStateProperty.all(Size(40, 40)),
               padding: MaterialStateProperty.all(EdgeInsets.zero),
             ),
-            child: Icon(Icons.repeat, size: 30),
+            child:
+                Icon(loop == false ? Icons.repeat : Icons.repeat_one, size: 30),
           ),
           TextButton(
             onPressed: () {

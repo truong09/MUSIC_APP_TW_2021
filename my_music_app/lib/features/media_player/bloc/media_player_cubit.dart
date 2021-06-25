@@ -1,20 +1,6 @@
-// import 'dart:async';
-
-// import 'package:audio_service/audio_service.dart';
-// import 'package:audioplayersaudioservice/features/audio_track/domain/entities/audio_track.dart';
-// import 'package:audioplayersaudioservice/features/audio_track/domain/usecases/get_audio_track_usecase.dart';
-// import 'package:audioplayersaudioservice/features/media_player/audio_player_task.dart';
-// import 'package:audioplayersaudioservice/features/media_player/playing_duration_cubit/playing_duration_cubit.dart';
-// import 'package:audioplayersaudioservice/features/media_player/playing_position_cudit/playing_position_cubit.dart';
-// import 'package:audioplayersaudioservice/features/media_player/playing_route_cubit/playing_route_cubit.dart';
-// // import 'package:audioplayersaudioservice/features/media_player/playing_speed_bloc/playing_speed_bloc.dart';
-// import 'package:audioplayersaudioservice/features/media_player/plyer_seek_cubit/player_seek_cubit.dart';
-// import 'package:audioplayersaudioservice/features/show_error/error_bar_cubit.dart';
-// import 'package:bloc/bloc.dart';
-// import 'package:meta/meta.dart';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:bloc/bloc.dart';
+import 'package:my_music_app/comon_variable.dart';
 import 'package:my_music_app/features/audio_track/domain/entities/audio_track.dart';
 import 'package:my_music_app/features/audio_track/domain/usecases/get_audio_track_usecase.dart';
 import 'package:my_music_app/features/media_player/playing_duration_cubit/playing_duration_cubit.dart';
@@ -203,9 +189,16 @@ class MediaPlayerCubit extends Cubit<MediaPlayerStateAbstract> {
 
   Future<void> nextTrack() async {
     if (_audioTrack is AudioTrack) {
-      var nextTrack = await getAudioTrackUseCase.next(
-        currentTrackIndex: _audioTrack.currentTrackIndex,
-      );
+      var nextTrack;
+      if (loop == true) {
+        nextTrack = await getAudioTrackUseCase.next(
+          currentTrackIndex: _audioTrack.currentTrackIndex - 1,
+        );
+      } else {
+        nextTrack = await getAudioTrackUseCase.next(
+          currentTrackIndex: _audioTrack.currentTrackIndex,
+        );
+      }
       if (nextTrack is AudioTrack) {
         _audioTrack = nextTrack;
         emit(MediaPlayerPlayingState(_audioTrack));

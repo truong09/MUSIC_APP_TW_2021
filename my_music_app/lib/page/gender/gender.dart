@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_music_app/core/search_album.dart';
 import 'package:my_music_app/model/service/song_service.dart';
 
-import 'package:my_music_app/model/singer.dart';
 import 'package:my_music_app/page/gender/gender_detail.dart';
-import 'package:my_music_app/page/singer/singer_detail.dart';
 
 class GenderPage extends StatefulWidget {
   @override
