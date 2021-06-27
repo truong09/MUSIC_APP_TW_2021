@@ -39,7 +39,7 @@ class _SingerDetailState extends State<SingerDetail> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 title: Text(
-                  "Banh sách bài hát nổi bật",
+                  "Danh sách bài hát nổi bật",
                   style: TextStyle(color: Colors.blue),
                 ),
                 centerTitle: true,
